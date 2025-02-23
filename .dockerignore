@@ -1,0 +1,13 @@
+# Ignore all yaml files
+*.yaml
+
+# Ignore markdown files
+*.md
+
+# Ignore shell scripts
+*.sh
+
+# Other files
+.git
+.gitignore
+Dockerfile

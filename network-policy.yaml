@@ -1,0 +1,21 @@
+# Redis port only accept traffic from Webserver
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-network-policy
+  namespace: music-app
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: music-app
+      ports:
+        - protocol: TCP
+          port: 6379

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-app
+  namespace: music-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: music-app
+  template:
+    metadata:
+      labels:
+        app: music-app
+    spec:
+      containers:
+      - name: music-app
+        image: asafkara/music-server:latest
+        env:
+        - name: REDIS_HOST
+          value: "redis"  
+        - name: REDIS_PORT
+          value: "6379"
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: redis-password
+        ports:
+        - containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-app-service
+  namespace: music-app
+spec:
+  selector:
+    app: music-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9090
+    nodePort: 30080  # Manually set a NodePort (between 30000-32767)
+  type: NodePort  # Expose service outside the cluster

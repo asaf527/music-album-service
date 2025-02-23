@@ -1,0 +1,67 @@
+# Global configurations
+global:
+  namespace: music-app
+
+# Music App configurations
+musicApp:
+  image:
+    repository: asafkara/music-server
+    tag: latest
+    pullPolicy: Always
+  
+  replicaCount: 3
+  
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 9090
+    nodePort: 30080
+
+# Redis configurations
+redis:
+  enabled: true  # Set to false if using external Redis
+  architecture: standalone
+  auth:
+    enabled: true
+    password: "yourpassword"  # This should be changed in production
+  
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+
+# Ingress configurations
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: music.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: music-tls
+      hosts:
+        - music.local
+
+# Network Policy configurations
+networkPolicy:
+  enabled: true
+
+# TLS configurations
+tls:
+  enabled: true
+  certificate: |
+    # Base64 encoded certificate
+  key: |
+    # Base64 encoded private key

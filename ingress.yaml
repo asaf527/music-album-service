@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: music-ingress
+  namespace: music-app
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx  # ✅ Ensure Minikube uses the NGINX Ingress controller
+  tls:
+  - hosts:
+    - music.local
+    secretName:  music-tls # ✅ Make sure this secret exists
+  rules:
+  - host: music.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: music-app-service
+            port:
+              number: 80
