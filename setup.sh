@@ -125,7 +125,7 @@ kubectl apply -f network-policy.yaml -n music-app
 
 # Generate TLS Certificate
 echo "🔒 Generating TLS certificate..."
-cd certs
+mkdir certs && cd certs
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -subj "/CN=music.local"
 kubectl create secret tls music-tls --cert=tls.crt --key=tls.key -n music-app
 cd ..
